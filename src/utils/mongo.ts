@@ -3,7 +3,10 @@ import config from "config";
 
 export async function connectToMongo() {
   try {
-    await mongoose.connect(config.get("dbUri"));
+    mongoose.connection.syncIndexes();
+    await mongoose.connect(config.get("dbUri"), {
+      autoIndex: true,
+    });
     console.log("Connected to the Mongo DB database");
   } catch (err) {
     console.error(err);
