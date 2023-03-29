@@ -13,7 +13,6 @@ export const userAuth: MiddlewareFn<Context> = async ({ context }, next) => {
   try {
     const token = authorization.split(" ")[1];
     const payload = verifyJWT(token);
-    console.log(payload);
     context.user = payload as User;
   } catch (e) {
     console.log(e);

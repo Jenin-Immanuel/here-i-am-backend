@@ -9,6 +9,7 @@ import { IsEmail, MinLength } from "class-validator";
 import { Field, InputType, ObjectType } from "type-graphql";
 import bcrypt from "bcrypt";
 import { AsQueryMethod, ReturnModelType } from "@typegoose/typegoose/lib/types";
+import Gender from "../types/gender";
 
 function findByEmail(
   this: ReturnModelType<typeof User, QueryHelpers>,
@@ -50,6 +51,18 @@ export class User {
 
   @prop({ required: true })
   password: string;
+
+  @Field(() => String)
+  @prop()
+  gender: Gender;
+
+  @Field(() => Date)
+  @prop()
+  dob: Date;
+
+  @Field(() => Number)
+  @prop()
+  mobile: number;
 }
 
 @InputType()
@@ -64,6 +77,15 @@ export class CreateUserInput {
   @MinLength(6, { message: "Password needs to be more than 6 chars" })
   @Field(() => String)
   password: string;
+
+  @Field(() => String)
+  gender: Gender;
+
+  @Field(() => Date)
+  dob: Date;
+
+  @Field(() => Number)
+  mobile: number;
 }
 
 @InputType()

@@ -8,7 +8,7 @@ import {
 } from "../schema/user.schema";
 import Context from "../types/context";
 import bcrypt from "bcrypt";
-import { signJWT, verifyJWT } from "../utils/jwt";
+import { signJWT } from "../utils/jwt";
 
 class UserService {
   private async checkPasswordValid(
@@ -24,11 +24,16 @@ class UserService {
   }
 
   async createUser(input: CreateUserInput) {
+    const t = await UserModel.find().findByEmail(input.email).lean();
+    if (t) {
+      throw new Error("Email address is already in use");
+    }
     try {
       const user = new UserModel(input);
       await user.save();
       return user.toObject();
     } catch (error: any) {
+      console.log(error);
       throw new GraphQLError("Email address is already in use");
     }
   }
@@ -96,29 +101,6 @@ class UserService {
         },
       });
     }
-
-    // // Verify the token
-    // const token = context.req.headers["authorization"];
-    // if (!token) {
-    //   throw new GraphQLError("Not logged in to log out", {
-    //     extensions: {
-    //       code: "FORBIDDEN",
-    //     },
-    //   });
-    // }
-    // const fromToken = verifyJWT<User>(token);
-    // console.log(fromToken);
-    // console.log(token);
-    // if (fromToken === user) {
-    //   return "Loggedout";
-    // } else {
-    //   throw new GraphQLError("Token has been tampered", {
-    //     extensions: {
-    //       code: "FORBIDDEN",
-    //     },
-    //   });
-    // }
-
     return "LoggedOut";
   }
 }

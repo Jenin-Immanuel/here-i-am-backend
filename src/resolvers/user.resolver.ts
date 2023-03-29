@@ -25,6 +25,7 @@ export default class UserResolver {
 
   @Mutation(() => User)
   createUser(@Arg("input") input: CreateUserInput) {
+    console.log(input);
     return this.userService.createUser(input);
   }
 
