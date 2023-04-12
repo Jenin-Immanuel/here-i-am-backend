@@ -46,18 +46,18 @@ class UserService {
 
     if (!user) {
       console.log("Error");
-      throw new Error(e);
+      throw new GraphQLError(e);
     }
 
     // validate the password
-    const passwordIsValid = this.checkPasswordValid(
+    const passwordIsValid = await this.checkPasswordValid(
       input.password,
       user.password
     );
 
     if (!passwordIsValid) {
       console.log("Error");
-      throw new Error(e);
+      throw new GraphQLError(e);
     }
 
     // sign a jwt
